@@ -321,7 +321,7 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 ---
 
 <div align="center">
-  <p>Built with ❤️ by the IconikCerts team</p>
+  <p>Built with ❤️ by the IconikStudio team</p>
   <p>
     <a href="https://github.com/mjeshani2/iconikcerts">⭐ Star us on GitHub</a> •
     <a href="https://github.com/mjeshani2/iconikcerts/issues">🐛 Report Bug</a> •
