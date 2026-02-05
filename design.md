@@ -3,149 +3,145 @@
 ## 1. Design Overview
 
 ### System Vision
-IconikCerts is architected as a modern, cloud-native certificate generation platform that prioritizes automation, precision, and scalability. The system is designed to handle everything from individual certificate creation to enterprise-scale bulk operations while maintaining pixel-perfect print quality and robust verification capabilities.
+IconikCerts is architected as a modern, cloud-native certificate generation platform that prioritizes developer experience, operational efficiency, and user satisfaction. The system is designed to handle everything from individual certificate creation to enterprise-scale bulk operations while maintaining pixel-perfect output quality and robust security.
+
+### Design Goals
+- **Rapid Time-to-Market**: MVP delivery within 3-4 months using proven technologies
+- **Seamless Scalability**: Architecture that grows from hundreds to millions of certificates without major rewrites
+- **Developer Productivity**: Modern toolchain with strong typing, excellent DX, and maintainable code
+- **Operational Excellence**: Built-in observability, error handling, and automated recovery mechanisms
 
 ### Core Design Principles
 
 #### Modularity
-- **Component-Based Architecture**: Each major feature (editor, generation, verification) operates as an independent module with well-defined interfaces
-- **Service Separation**: Clear boundaries between presentation, business logic, and data layers
-- **Plugin Architecture**: Extensible design allowing for future integrations and custom functionality
+- **Domain-Driven Design**: Clear separation between template management, certificate generation, marketplace, and verification domains
+- **Composable Architecture**: Independent modules that can be developed, tested, and deployed separately
+- **Interface-Based Integration**: Well-defined contracts between system components
 
-#### Accuracy
-- **Pixel-Perfect Rendering**: Consistent output across different devices and print configurations
-- **Print Fidelity**: Precise control over DPI, margins, and color profiles for professional printing
-- **Data Integrity**: Cryptographic verification ensuring certificate authenticity and tamper detection
+#### Precision
+- **Pixel-Perfect Rendering**: Consistent output across different devices, browsers, and print configurations
+- **Print Accuracy**: Professional-grade print handling with proper DPI, margins, and color management
+- **Data Integrity**: Comprehensive validation and error handling throughout the pipeline
+
+#### Scalability
+- **Horizontal Scaling**: Stateless services that can scale independently based on demand
+- **Asynchronous Processing**: Background job processing for resource-intensive operations
+- **Efficient Resource Utilization**: Optimized database queries, caching strategies, and CDN usage
 
 #### Extensibility
-- **API-First Design**: All functionality exposed through well-documented APIs for future integrations
-- **Template System**: Flexible template engine supporting custom fields, layouts, and styling
-- **Marketplace Ready**: Built-in support for community contributions and monetization
+- **Plugin Architecture**: Extensible template editor with custom element types and behaviors
+- **API-First Design**: Public APIs that enable third-party integrations and custom workflows
+- **Configuration-Driven**: Feature flags and configuration management for gradual rollouts
 
-#### Performance
-- **Asynchronous Processing**: Background job processing for resource-intensive operations
-- **Caching Strategy**: Multi-layer caching for templates, assets, and generated content
-- **Optimized Rendering**: Efficient PDF generation with memory management and resource pooling
-
-### MVP-First, Scale-Ready Philosophy
-The architecture follows a progressive enhancement approach, starting with a monolithic Next.js application that can seamlessly evolve into a distributed microservices architecture. This ensures rapid MVP delivery while maintaining the flexibility to scale to enterprise requirements.
+### MVP-First Approach
+The architecture supports a phased development approach where core functionality is delivered quickly, with clear upgrade paths for advanced features. The initial MVP focuses on essential certificate creation and generation capabilities, while the architecture accommodates future enhancements like marketplace functionality, advanced verification, and enterprise features.
 
 ---
 
-## 2. Final Tech Stack
+## 2. Technology Stack
 
-### Frontend
-- **Next.js 14+ (React + TypeScript)**: Full-stack framework providing SSR, API routes, and optimal developer experience
-- **Tailwind CSS**: Utility-first CSS framework for rapid UI development and consistent design system
+### Frontend Stack
+- **Next.js 14+**: Full-stack React framework with App Router for optimal performance and SEO
+- **TypeScript**: Strong typing for improved developer experience and code reliability
+- **Tailwind CSS**: Utility-first CSS framework for rapid UI development and consistent design
 - **shadcn/ui**: High-quality, accessible component library built on Radix UI primitives
-- **Fabric.js**: Powerful HTML5 canvas library for the certificate editor with object manipulation and serialization
-- **Zustand**: Lightweight state management for complex editor state and real-time collaboration
+- **Fabric.js**: Powerful canvas library for interactive certificate editor with object manipulation
+- **Zustand**: Lightweight state management for complex editor state and user interactions
 
-### Backend
-- **Next.js API Routes (MVP)**: Serverless API endpoints for rapid development and deployment
-- **NestJS (Scaling Phase)**: Enterprise-grade Node.js framework with dependency injection and modular architecture
+### Backend Architecture
+- **Next.js API Routes**: Serverless API endpoints for MVP rapid development and deployment
+- **NestJS**: Enterprise-grade Node.js framework for future modularization and microservices migration
+- **Prisma ORM**: Type-safe database access with excellent TypeScript integration and migration management
 
-### Database & ORM
-- **PostgreSQL**: ACID-compliant relational database with JSON support for flexible schema evolution
-- **Prisma**: Type-safe ORM with automatic migrations, introspection, and excellent TypeScript integration
+### Database & Storage
+- **PostgreSQL**: Robust relational database with excellent JSON support and full-text search capabilities
+- **Cloudflare R2**: Cost-effective object storage with global CDN integration for template assets and generated certificates
+- **Redis (Upstash)**: In-memory data store for session management, caching, and job queues
 
-### File Storage
-- **Cloudflare R2 / AWS S3**: Object storage for templates, generated certificates, and user assets with global CDN distribution
+### Processing & Generation
+- **Puppeteer**: Headless Chrome for high-fidelity HTML-to-PDF conversion with precise print control
+- **PapaParse**: Robust CSV parsing library with streaming support for large datasets
+- **SheetJS**: Comprehensive Excel file processing with support for multiple formats
+- **BullMQ**: Advanced job queue system with Redis backend for reliable background processing
 
-### PDF Generation
-- **Puppeteer**: Headless Chrome for pixel-perfect HTML-to-PDF rendering with full CSS support and print media queries
-
-### Bulk Processing
-- **PapaParse**: High-performance CSV parsing with streaming support for large datasets
-- **SheetJS**: Comprehensive Excel file processing with format detection and data extraction
-- **BullMQ + Redis (Upstash)**: Robust job queue system with retry logic, progress tracking, and horizontal scaling
-
-### Authentication
+### Authentication & Security
 - **NextAuth.js**: Flexible authentication library with multiple provider support and session management
+- **bcrypt**: Industry-standard password hashing with configurable salt rounds
+- **jsonwebtoken**: JWT token generation and validation for API authentication
 
-### Verification
-- **QR Code Generation**: Cryptographically secure QR codes with embedded verification data
-- **SHA-256 Hashing**: Certificate fingerprinting for tamper detection and integrity verification
-
-### Deployment
-- **Vercel**: Edge-optimized deployment platform with automatic scaling and global CDN
-- **Supabase / Neon / Railway**: Managed PostgreSQL with connection pooling and automatic backups
-- **Upstash Redis**: Serverless Redis for job queues and caching with global replication
+### Infrastructure & Deployment
+- **Vercel**: Edge-optimized hosting platform with automatic scaling and global CDN
+- **Supabase/Neon**: Managed PostgreSQL with connection pooling and automatic backups
+- **Upstash**: Serverless Redis with global replication and automatic scaling
 
 ---
 
 ## 3. High-Level Architecture
 
-### Frontend Layer
-**Certificate Editor**
-- Canvas-based design interface with real-time preview
-- Component palette with drag-and-drop functionality
-- Property panels for precise element configuration
-- Template management and versioning interface
+### System Components Overview
 
-**User Dashboard**
-- Certificate generation history and management
-- Template library with search and filtering
-- Team collaboration and role management
-- Analytics and usage reporting
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Web Frontend  │    │   Mobile Web    │    │  Public Verify  │
+│   (Dashboard)   │    │   (Wallet)      │    │   (QR Codes)    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                    ┌─────────────────┐
+                    │   API Gateway   │
+                    │  (Next.js API)  │
+                    └─────────────────┘
+                                 │
+         ┌───────────────────────┼───────────────────────┐
+         │                       │                       │
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  Template API   │    │ Certificate API │    │ Marketplace API │
+│   (CRUD, Edit)  │    │ (Generate, Bulk)│    │ (Browse, Buy)   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                    ┌─────────────────┐
+                    │  Background     │
+                    │  Job Workers    │
+                    └─────────────────┘
+                                 │
+         ┌───────────────────────┼───────────────────────┐
+         │                       │                       │
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   PostgreSQL    │    │   Redis Queue   │    │  Object Storage │
+│   (Metadata)    │    │   (Jobs, Cache) │    │ (Files, Assets) │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
 
-**Marketplace**
-- Template discovery and browsing interface
-- Creator profiles and revenue dashboards
-- Rating and review system
-- Purchase and licensing management
+### Component Responsibilities
 
-### Backend API Layer
-**Authentication & Authorization**
-- User registration and login endpoints
-- Role-based access control middleware
-- Session management and token validation
-- Team invitation and management APIs
+#### Web Frontend Layer
+- **Dashboard Application**: Template management, certificate generation, user settings, and analytics
+- **Mobile-Optimized Wallet**: Certificate viewing, sharing, and verification for recipients
+- **Public Verification Service**: Standalone verification pages accessible via QR codes
 
-**Template Management**
-- Template CRUD operations with versioning
-- Asset upload and optimization
-- Template validation and sanitization
-- Marketplace publishing workflows
+#### API Gateway Layer
+- **Request Routing**: Intelligent routing based on authentication, rate limiting, and feature flags
+- **Authentication Middleware**: JWT validation, session management, and role-based access control
+- **Response Transformation**: Consistent API responses with error handling and data formatting
 
-**Certificate Generation**
-- Bulk processing job creation and management
-- Real-time generation progress tracking
-- PDF rendering and optimization
-- Distribution and delivery coordination
+#### Business Logic Layer
+- **Template Service**: Template CRUD operations, versioning, and editor state management
+- **Certificate Service**: Individual and bulk certificate generation with quality validation
+- **Marketplace Service**: Template publishing, purchasing, and revenue distribution
+- **Verification Service**: QR code generation, certificate validation, and authenticity checking
 
-### Background Job Processing
-**Queue Management**
-- Job prioritization and resource allocation
-- Retry logic with exponential backoff
-- Dead letter queue handling
-- Performance monitoring and alerting
+#### Background Processing Layer
+- **Bulk Generation Workers**: Parallel processing of large certificate batches with progress tracking
+- **Email Delivery Workers**: Reliable email distribution with retry logic and delivery confirmation
+- **Asset Processing Workers**: Image optimization, template compilation, and cache warming
 
-**Processing Workers**
-- Certificate generation workers with resource pooling
-- Email delivery workers with rate limiting
-- Asset optimization workers
-- Cleanup and maintenance workers
-
-### Storage and CDN
-**Asset Storage**
-- Template assets with versioning and deduplication
-- Generated certificate storage with lifecycle management
-- User uploads with virus scanning and validation
-- Backup and disaster recovery procedures
-
-**Content Delivery**
-- Global CDN distribution for static assets
-- Edge caching for frequently accessed content
-- Image optimization and format conversion
-- Bandwidth optimization and compression
-
-### Verification Services
-**QR Code Resolution**
-- Public verification endpoints without authentication
-- Certificate status checking and validation
-- Issuer information and credential display
-- Fraud detection and suspicious activity monitoring
+#### Data Layer
+- **Primary Database**: User accounts, templates, certificates, and transactional data
+- **Cache Layer**: Session data, frequently accessed templates, and computed results
+- **File Storage**: Template assets, generated certificates, and user uploads
 
 ---
 
@@ -153,360 +149,845 @@ The architecture follows a progressive enhancement approach, starting with a mon
 
 ### Template Editor Engine
 
-#### Fabric.js-Based Canvas
-- **Object Model**: Rich object hierarchy supporting text, images, shapes, and custom elements
-- **Serialization**: JSON-based template storage with version compatibility
-- **Event System**: Comprehensive event handling for user interactions and state changes
-- **Rendering Pipeline**: Optimized rendering with dirty region updates and object caching
+#### Canvas Management System
+The template editor is built around Fabric.js, providing a powerful canvas-based editing experience with precise control over design elements.
 
-#### Layer System
-- **Z-Index Management**: Visual layer ordering with drag-and-drop reordering
-- **Layer Groups**: Logical grouping of related elements with bulk operations
-- **Visibility Controls**: Show/hide layers with inheritance and dependency management
-- **Lock Mechanism**: Element locking to prevent accidental modifications
+**Core Capabilities:**
+- **Object Lifecycle Management**: Creation, modification, deletion, and persistence of canvas objects
+- **Layer Management**: Z-index control, grouping, and locking mechanisms for complex layouts
+- **Transformation Controls**: Resize, rotate, skew, and position controls with constraint handling
+- **Selection System**: Multi-select, group operations, and bulk property modifications
 
-#### Dynamic Field Binding
-- **Variable System**: Template variables with type validation and default values
-- **Data Binding**: Real-time preview with sample data population
-- **Conditional Logic**: Show/hide elements based on data conditions and business rules
-- **Formula Engine**: Basic calculations and data transformations
+#### Dynamic Field System
+A sophisticated placeholder system that enables data-driven certificate generation.
 
-#### Alignment and Snapping Logic
-- **Smart Guides**: Dynamic alignment guides with magnetic snapping
-- **Grid System**: Configurable grid with snap-to-grid functionality
-- **Measurement Tools**: Rulers and dimension displays for precise positioning
-- **Distribution Tools**: Automatic spacing and alignment of multiple elements
+**Field Types:**
+- **Text Fields**: Name, course, date, grade, and custom text with formatting options
+- **Computed Fields**: Auto-generated IDs, calculated dates, and derived values
+- **Conditional Fields**: Display logic based on recipient data or template configuration
+- **Validation Rules**: Required fields, format validation, and data type constraints
+
+#### Design Tools & Utilities
+- **Alignment System**: Smart guides, grid snapping, and distribution tools for precise positioning
+- **Ruler & Measurement**: Visual rulers with customizable units and measurement overlays
+- **History Management**: Undo/redo functionality with branching support for complex editing sessions
+- **Template Validation**: Real-time validation of template structure and field mappings
 
 ### Certificate Generation Engine
 
-#### HTML → PDF Rendering via Puppeteer
-- **Template Compilation**: Dynamic HTML generation from template definitions
-- **CSS Processing**: Print-optimized CSS with media queries and color profiles
-- **Resource Loading**: Efficient asset loading with caching and optimization
-- **Memory Management**: Resource cleanup and garbage collection for high-volume processing
+#### HTML Rendering Pipeline
+A multi-stage rendering system that converts template definitions into print-ready documents.
 
-#### Print Configuration Handling
-- **Paper Size Management**: Support for standard and custom paper dimensions
-- **Orientation Control**: Portrait and landscape with automatic layout adjustment
-- **Margin Enforcement**: Precise margin control with bleed and safe area calculations
-- **Color Space Conversion**: RGB to CMYK conversion for professional printing
+**Rendering Stages:**
+1. **Template Compilation**: Convert canvas objects into structured HTML with embedded CSS
+2. **Data Binding**: Merge recipient data with template placeholders using secure templating
+3. **Layout Calculation**: Compute final positions, sizes, and styling for all elements
+4. **Quality Assurance**: Validate output against template specifications and print requirements
 
-#### DPI and Margin Enforcement
-- **Resolution Control**: Configurable DPI settings for different output requirements
-- **Print Quality Optimization**: Anti-aliasing and font rendering optimization
-- **Margin Validation**: Automatic margin validation with error reporting
-- **Layout Verification**: Pre-generation layout validation and correction
+#### PDF Generation System
+Puppeteer-based PDF generation with professional print quality and configuration options.
 
-### Bulk Processing Engine
+**Generation Features:**
+- **Print Optimization**: Configurable DPI, color profiles, and print-specific formatting
+- **Margin Management**: Precise margin control with bleed area support for professional printing
+- **Batch Processing**: Efficient generation of multiple certificates with resource optimization
+- **Quality Control**: Automated validation of PDF output against template specifications
 
-#### File Ingestion
-- **Format Detection**: Automatic file format identification and validation
-- **Data Extraction**: Robust parsing with error handling and data cleaning
-- **Schema Validation**: Column mapping validation with type checking
-- **Preview Generation**: Sample data preview for user verification
+#### Export Configuration Layer
+Flexible export system supporting multiple formats and use cases.
 
-#### Validation
-- **Data Quality Checks**: Duplicate detection and data consistency validation
-- **Required Field Validation**: Mandatory field checking with error reporting
-- **Format Validation**: Email, date, and custom format validation
-- **Business Rule Validation**: Custom validation rules and constraints
+**Export Options:**
+- **PDF Formats**: Print-ready, web-optimized, and archive-quality variants
+- **Image Formats**: High-resolution PNG, JPEG with configurable compression and dimensions
+- **Batch Packaging**: ZIP archives with organized folder structures and metadata files
+- **Custom Formats**: Extensible system for future format support and specialized outputs
 
-#### Job Queues
-- **Priority Management**: Job prioritization based on user tier and urgency
-- **Resource Allocation**: Dynamic worker allocation based on job complexity
-- **Batch Optimization**: Intelligent batching for optimal resource utilization
-- **Failure Handling**: Comprehensive error handling with partial success support
+### Bulk Generation Engine
 
-#### Progress Tracking
-- **Real-Time Updates**: WebSocket-based progress updates with detailed status
-- **Granular Reporting**: Per-certificate status tracking with error details
-- **Completion Notifications**: Multi-channel notifications for job completion
-- **History Management**: Complete job history with replay capabilities
+#### File Ingestion System
+Robust data import system supporting multiple file formats with comprehensive validation.
+
+**Supported Formats:**
+- **CSV Processing**: RFC 4180 compliant parsing with encoding detection and delimiter inference
+- **Excel Integration**: Support for .xlsx, .xls formats with multiple worksheet handling
+- **Google Sheets**: Direct API integration with real-time data synchronization
+- **JSON Import**: Structured data import for API integrations and advanced use cases
+
+#### Data Mapping Interface
+Intuitive interface for mapping imported data columns to certificate template fields.
+
+**Mapping Features:**
+- **Visual Column Mapping**: Drag-and-drop interface for field assignment with preview
+- **Data Type Detection**: Automatic detection of data types with validation rules
+- **Transformation Rules**: Data cleaning, formatting, and computed field generation
+- **Validation Feedback**: Real-time validation with error highlighting and correction suggestions
+
+#### Queue-Based Processing
+Scalable job processing system built on BullMQ for reliable bulk operations.
+
+**Processing Features:**
+- **Job Prioritization**: Priority queues for urgent requests and premium users
+- **Progress Tracking**: Real-time progress updates with estimated completion times
+- **Error Handling**: Comprehensive error recovery with partial completion support
+- **Resource Management**: Dynamic scaling based on system load and job complexity
 
 ### Marketplace Module
 
-#### Template Publishing
-- **Submission Workflow**: Multi-step template submission with validation
-- **Quality Assurance**: Automated and manual quality checks
-- **Metadata Management**: Rich metadata with tags, categories, and descriptions
-- **Version Control**: Template versioning with backward compatibility
+#### Template Publishing Workflow
+Streamlined process for template creators to publish and monetize their designs.
 
-#### Ratings & Metrics
-- **Review System**: Comprehensive rating and review system with moderation
-- **Usage Analytics**: Download and usage statistics with trend analysis
-- **Performance Metrics**: Template performance tracking and optimization suggestions
-- **Creator Analytics**: Detailed creator dashboards with revenue and engagement metrics
+**Publishing Pipeline:**
+1. **Quality Review**: Automated and manual quality checks for template standards
+2. **Metadata Management**: Title, description, tags, and categorization with SEO optimization
+3. **Pricing Configuration**: Flexible pricing models including free, one-time, and subscription options
+4. **Preview Generation**: Automatic generation of template previews and sample certificates
 
-#### Revenue Calculation
-- **Pricing Models**: Support for free, paid, and subscription-based templates
-- **Revenue Sharing**: Transparent revenue split calculation and reporting
-- **Payment Processing**: Secure payment handling with multiple payment methods
-- **Payout Management**: Automated creator payouts with detailed transaction history
+#### Revenue Distribution System
+Transparent and automated revenue sharing system for template creators.
+
+**Revenue Features:**
+- **Split Configuration**: Configurable revenue splits between platform and creators
+- **Payment Processing**: Integration with Stripe for secure payment handling and payouts
+- **Analytics Dashboard**: Detailed sales analytics, performance metrics, and earnings reports
+- **Tax Management**: Support for tax reporting and international payment compliance
+
+#### Discovery & Recommendation Engine
+Intelligent system for template discovery and personalized recommendations.
+
+**Discovery Features:**
+- **Search & Filtering**: Full-text search with faceted filtering by category, price, and ratings
+- **Recommendation Algorithm**: Machine learning-based recommendations using usage patterns
+- **Trending & Featured**: Curated collections and trending templates based on community engagement
+- **Social Features**: User reviews, ratings, and community-driven quality assessment
 
 ### Verification & Wallet Module
 
-#### QR Resolution
-- **Secure QR Generation**: Cryptographically secure QR codes with embedded verification data
-- **Resolution Service**: High-performance QR code resolution with caching
-- **Mobile Optimization**: Mobile-optimized verification interface with camera integration
-- **Offline Verification**: Support for offline verification with cached data
+#### QR Code Generation System
+Secure QR code generation with tamper-resistant verification capabilities.
 
-#### Public Verification Pages
-- **Anonymous Access**: Public verification without user authentication
-- **Rich Information Display**: Comprehensive certificate and issuer information
-- **Fraud Detection**: Automated fraud detection with machine learning
-- **Audit Trail**: Complete verification history with geographic and temporal data
+**QR Features:**
+- **Unique Identifiers**: Cryptographically secure unique IDs for each certificate
+- **Verification URLs**: Short, memorable URLs that resolve to full verification pages
+- **Offline Capability**: QR codes that work without internet connectivity using embedded data
+- **Customization Options**: Branded QR codes with logo embedding and color customization
 
-#### Certificate Lifecycle Management
-- **Status Management**: Certificate status tracking (valid, revoked, expired)
-- **Revocation System**: Instant certificate revocation with propagation
-- **Expiration Handling**: Automatic expiration with renewal workflows
-- **Archive Management**: Long-term certificate storage and retrieval
+#### Certificate Authenticity System
+Comprehensive system for ensuring certificate authenticity and preventing fraud.
 
----
+**Security Features:**
+- **Hash Generation**: SHA-256 hashing of certificate content with salt for uniqueness
+- **Tamper Detection**: Automatic detection of certificate modifications or unauthorized changes
+- **Revocation Management**: Instant certificate revocation with public status updates
+- **Audit Trail**: Complete history of certificate lifecycle events and verification attempts
 
-## 5. Data Flow
+#### Personal Wallet System
+User-friendly certificate management system for recipients.
 
-### Template Creation Flow
-1. **User Authentication**: User logs in and accesses the template editor
-2. **Canvas Initialization**: Fabric.js canvas loads with default template or existing template
-3. **Element Addition**: User adds text, images, and dynamic fields to the canvas
-4. **Property Configuration**: User configures element properties, styling, and positioning
-5. **Dynamic Field Binding**: User defines variable fields and data binding rules
-6. **Preview Generation**: System generates real-time preview with sample data
-7. **Validation**: Template validation ensures print compatibility and data integrity
-8. **Serialization**: Template serialized to JSON format with asset references
-9. **Storage**: Template and assets stored in database and object storage
-10. **Version Management**: Template version created with change tracking
-
-### Bulk Generation Flow
-1. **File Upload**: User uploads CSV/Excel file with recipient data
-2. **Data Parsing**: System parses file and extracts structured data
-3. **Column Mapping**: User maps data columns to template variables
-4. **Validation**: Data validation checks for completeness and format compliance
-5. **Preview Generation**: System generates sample certificates for user approval
-6. **Job Creation**: Bulk generation job created and queued for processing
-7. **Background Processing**: Workers process certificates in batches
-8. **PDF Generation**: Each certificate rendered to PDF using Puppeteer
-9. **Quality Assurance**: Generated PDFs validated for quality and completeness
-10. **Packaging**: Certificates packaged into ZIP archive with organized naming
-11. **Delivery**: Download link provided and optional email delivery initiated
-12. **Cleanup**: Temporary files cleaned up and job marked complete
-
-### Print Studio Flow
-1. **Template Selection**: User selects template for print optimization
-2. **Print Configuration**: User configures paper size, orientation, and margins
-3. **Layout Preview**: System generates print layout preview with page breaks
-4. **Color Profile Selection**: User selects appropriate color profile for printing
-5. **DPI Configuration**: Print resolution configured based on output requirements
-6. **Margin Validation**: System validates margins against printer capabilities
-7. **Print Optimization**: PDF optimized for selected print configuration
-8. **Cost Estimation**: System calculates estimated printing costs
-9. **Print Queue**: Print job added to queue with priority and settings
-10. **Output Generation**: Final print-ready PDF generated and delivered
-
-### Verification Flow
-1. **QR Code Scan**: User scans QR code using mobile device or web interface
-2. **Code Resolution**: System resolves QR code to certificate identifier
-3. **Database Lookup**: Certificate details retrieved from database
-4. **Status Validation**: Certificate status checked (valid, revoked, expired)
-5. **Issuer Verification**: Issuer credentials and authenticity validated
-6. **Information Display**: Certificate and issuer information displayed to user
-7. **Audit Logging**: Verification event logged with timestamp and location
-8. **Fraud Detection**: System checks for suspicious verification patterns
-9. **Analytics Update**: Verification statistics updated for reporting
-10. **Response Delivery**: Verification result delivered to user interface
+**Wallet Features:**
+- **Certificate Organization**: Categorization, tagging, and search capabilities for personal certificates
+- **Sharing Controls**: Granular privacy controls for certificate sharing and public visibility
+- **Export Options**: Multiple export formats with watermarking and attribution options
+- **Notification System**: Alerts for new certificates, expiration warnings, and status changes
 
 ---
 
-## 6. Data Models (Conceptual)
+## 5. Data Flow Descriptions
 
-### User
-- **Identity**: Unique identifier, email, authentication credentials
-- **Profile**: Name, avatar, bio, contact information
-- **Preferences**: UI settings, notification preferences, default configurations
-- **Subscription**: Plan type, billing information, usage limits
-- **Audit**: Creation date, last login, activity history
+### Template Creation and Versioning Flow
 
-### Team
-- **Organization**: Name, description, branding, contact information
-- **Members**: User relationships with roles and permissions
-- **Settings**: Team policies, approval workflows, default templates
-- **Billing**: Subscription details, usage tracking, payment history
-- **Analytics**: Team usage statistics and performance metrics
+**Step-by-Step Process:**
+1. **User Authentication**: User logs in and navigates to template editor with proper permissions validation
+2. **Canvas Initialization**: Editor loads with blank canvas or existing template, initializing Fabric.js with custom controls
+3. **Design Process**: User adds elements (text, images, shapes) with real-time validation and auto-save functionality
+4. **Field Configuration**: Dynamic fields are configured with placeholder syntax, validation rules, and formatting options
+5. **Preview Generation**: System generates sample certificate using test data to validate template structure
+6. **Version Management**: Template is saved with version increment, maintaining backward compatibility with existing certificates
+7. **Publication**: Template is marked as active and becomes available for certificate generation
 
-### Template
-- **Metadata**: Name, description, category, tags, version information
-- **Design**: Fabric.js canvas data, element definitions, styling information
-- **Configuration**: Paper size, orientation, margins, print settings
-- **Variables**: Dynamic field definitions with types and validation rules
-- **Assets**: Associated images, fonts, and other resources
-- **Permissions**: Ownership, sharing settings, marketplace visibility
+**Data Transformations:**
+- Canvas objects are serialized to JSON with custom properties for dynamic fields
+- Template metadata is extracted and indexed for search and categorization
+- Preview images are generated and optimized for various display contexts
+- Version history is maintained with diff tracking for change management
 
-### TemplateVersion
-- **Version Control**: Version number, change description, creation timestamp
-- **Design Snapshot**: Complete template state at version creation
-- **Compatibility**: Backward compatibility flags and migration rules
-- **Usage**: Version usage statistics and adoption metrics
-- **Rollback**: Rollback capabilities and version comparison tools
+### Bulk Certificate Generation Flow
 
-### Certificate
-- **Identity**: Unique certificate ID, generation timestamp, batch information
-- **Content**: Recipient data, generated content, template reference
-- **Status**: Current status (valid, revoked, expired), status history
-- **Verification**: Hash signature, QR code data, verification count
-- **Distribution**: Delivery status, download history, sharing information
-- **Audit**: Complete lifecycle audit trail with user attribution
+**Step-by-Step Process:**
+1. **Data Upload**: User uploads CSV/Excel file with recipient data, triggering file validation and parsing
+2. **Column Mapping**: Interactive interface allows mapping of data columns to template fields with preview
+3. **Data Validation**: System validates all data entries, checking for required fields, format compliance, and duplicates
+4. **Job Creation**: Bulk generation job is created and queued with priority based on user tier and system load
+5. **Background Processing**: Worker processes pick up job and begin parallel certificate generation
+6. **Progress Tracking**: Real-time updates are sent to user interface showing completion percentage and ETA
+7. **Quality Assurance**: Generated certificates are validated against template specifications and quality standards
+8. **Packaging**: Completed certificates are packaged into ZIP archive with organized folder structure
+9. **Notification**: User is notified of completion with download link and optional email delivery
 
-### CertificateVerification
-- **Verification Event**: Timestamp, IP address, user agent, geographic location
-- **Certificate Reference**: Link to verified certificate with status at time of verification
-- **Result**: Verification outcome, any detected issues or anomalies
-- **Analytics**: Verification source, referrer, device information
-- **Fraud Detection**: Risk score, suspicious activity flags, investigation status
+**Error Handling:**
+- Invalid data entries are flagged with specific error messages and line numbers
+- Partial failures allow successful certificates to be delivered while highlighting problematic entries
+- Retry mechanisms handle transient failures with exponential backoff
+- Comprehensive logging enables debugging and support resolution
 
-### BulkJob
-- **Job Configuration**: Template, data source, generation parameters
-- **Processing Status**: Current status, progress percentage, estimated completion
-- **Results**: Generated certificate count, success/failure statistics
-- **Error Handling**: Error logs, failed records, retry information
-- **Output**: Download links, delivery status, cleanup schedule
-- **Performance**: Processing time, resource usage, optimization metrics
+### Advanced Print Studio Flow
 
-### MarketplaceListing
-- **Template Reference**: Link to template with marketplace-specific metadata
-- **Pricing**: Price, licensing terms, revenue sharing configuration
-- **Performance**: Download count, rating, revenue generated
-- **Creator Information**: Creator profile, earnings, payout history
-- **Moderation**: Review status, quality score, featured status
-- **Analytics**: View count, conversion rate, user engagement metrics
+**Step-by-Step Process:**
+1. **Template Selection**: User selects template and configures print-specific settings (paper size, orientation, margins)
+2. **Layout Configuration**: System calculates optimal layout for multiple certificates per page if requested
+3. **Print Preview**: High-fidelity preview is generated showing exact print output with margin guides
+4. **Color Management**: Color profiles are applied based on printer type and paper specifications
+5. **Export Generation**: Print-optimized PDF is generated with proper DPI and color space conversion
+6. **Quality Validation**: Generated PDF is validated against print specifications and quality standards
+7. **Download Delivery**: Print-ready file is made available for download with printing instructions
+
+**Technical Considerations:**
+- Print DPI is set to 300 for professional quality output
+- Color space conversion ensures accurate color reproduction across different printers
+- Bleed areas are properly configured for professional printing services
+- Font embedding ensures consistent typography across different systems
+
+### Verification and Wallet Access Flow
+
+**Step-by-Step Process:**
+1. **QR Code Scan**: User scans QR code using mobile device or enters verification URL manually
+2. **Certificate Lookup**: System extracts certificate ID and performs database lookup with security validation
+3. **Authenticity Check**: Certificate hash is verified against stored hash to detect tampering
+4. **Status Validation**: Certificate status is checked (valid, revoked, expired) with real-time updates
+5. **Information Display**: Certificate details are displayed with issuer information and verification timestamp
+6. **Wallet Integration**: Verified certificates can be added to personal wallet with user consent
+7. **Sharing Options**: User can generate shareable links or export certificate with verification proof
+
+**Security Measures:**
+- All verification attempts are logged with IP address and timestamp for audit purposes
+- Rate limiting prevents abuse of verification system
+- Certificate hashes are validated using cryptographic methods to ensure integrity
+- Personal information is protected while maintaining verification transparency
+
+---
+
+## 6. Conceptual Data Models
+
+### Core Entity Relationships
+
+#### User Management
+```
+User
+├── id: UUID (Primary Key)
+├── email: String (Unique)
+├── name: String
+├── avatar_url: String (Optional)
+├── role: Enum (USER, CREATOR, ADMIN)
+├── subscription_tier: Enum (FREE, PRO, ENTERPRISE)
+├── created_at: Timestamp
+├── updated_at: Timestamp
+└── teams: Team[] (Many-to-Many)
+
+Team
+├── id: UUID (Primary Key)
+├── name: String
+├── description: String (Optional)
+├── owner_id: UUID (Foreign Key → User)
+├── subscription_tier: Enum (TEAM, ENTERPRISE)
+├── created_at: Timestamp
+└── members: TeamMember[]
+
+TeamMember
+├── id: UUID (Primary Key)
+├── team_id: UUID (Foreign Key → Team)
+├── user_id: UUID (Foreign Key → User)
+├── role: Enum (ADMIN, EDITOR, VIEWER)
+├── permissions: JSON
+└── joined_at: Timestamp
+```
+
+#### Template System
+```
+Template
+├── id: UUID (Primary Key)
+├── name: String
+├── description: Text (Optional)
+├── category: String
+├── tags: String[]
+├── creator_id: UUID (Foreign Key → User)
+├── team_id: UUID (Foreign Key → Team, Optional)
+├── is_public: Boolean
+├── is_marketplace: Boolean
+├── current_version_id: UUID (Foreign Key → TemplateVersion)
+├── created_at: Timestamp
+├── updated_at: Timestamp
+└── versions: TemplateVersion[]
+
+TemplateVersion
+├── id: UUID (Primary Key)
+├── template_id: UUID (Foreign Key → Template)
+├── version_number: String (e.g., "1.0.0")
+├── canvas_data: JSON (Fabric.js serialized data)
+├── fields_config: JSON (Dynamic field definitions)
+├── print_settings: JSON (Page size, margins, DPI)
+├── preview_url: String
+├── is_active: Boolean
+├── created_at: Timestamp
+└── certificates: Certificate[]
+```
+
+#### Certificate Management
+```
+Certificate
+├── id: UUID (Primary Key)
+├── certificate_number: String (Unique)
+├── template_version_id: UUID (Foreign Key → TemplateVersion)
+├── recipient_name: String
+├── recipient_email: String (Optional)
+├── recipient_data: JSON (All dynamic field values)
+├── issuer_id: UUID (Foreign Key → User)
+├── team_id: UUID (Foreign Key → Team, Optional)
+├── status: Enum (VALID, REVOKED, EXPIRED)
+├── issued_at: Timestamp
+├── expires_at: Timestamp (Optional)
+├── qr_code: String (Unique verification code)
+├── file_url: String (PDF/Image URL)
+├── created_at: Timestamp
+└── hash: CertificateHash
+
+CertificateHash
+├── id: UUID (Primary Key)
+├── certificate_id: UUID (Foreign Key → Certificate)
+├── hash_algorithm: String (e.g., "SHA-256")
+├── hash_value: String (Cryptographic hash)
+├── salt: String (Random salt for uniqueness)
+└── created_at: Timestamp
+```
+
+#### Bulk Processing
+```
+BulkGenerationJob
+├── id: UUID (Primary Key)
+├── name: String
+├── template_version_id: UUID (Foreign Key → TemplateVersion)
+├── creator_id: UUID (Foreign Key → User)
+├── team_id: UUID (Foreign Key → Team, Optional)
+├── status: Enum (PENDING, PROCESSING, COMPLETED, FAILED, CANCELLED)
+├── total_count: Integer
+├── processed_count: Integer
+├── success_count: Integer
+├── error_count: Integer
+├── input_file_url: String
+├── output_file_url: String (Optional)
+├── error_report_url: String (Optional)
+├── progress_percentage: Float
+├── estimated_completion: Timestamp (Optional)
+├── started_at: Timestamp (Optional)
+├── completed_at: Timestamp (Optional)
+├── created_at: Timestamp
+└── certificates: Certificate[]
+```
+
+#### Marketplace System
+```
+MarketplaceListing
+├── id: UUID (Primary Key)
+├── template_id: UUID (Foreign Key → Template)
+├── title: String
+├── description: Text
+├── price: Decimal (0 for free templates)
+├── currency: String (e.g., "USD")
+├── category: String
+├── tags: String[]
+├── preview_images: String[] (URLs)
+├── is_featured: Boolean
+├── is_active: Boolean
+├── download_count: Integer
+├── rating_average: Float
+├── rating_count: Integer
+├── revenue_split: Float (Creator percentage)
+├── created_at: Timestamp
+├── updated_at: Timestamp
+├── purchases: MarketplacePurchase[]
+└── reviews: MarketplaceReview[]
+
+MarketplacePurchase
+├── id: UUID (Primary Key)
+├── listing_id: UUID (Foreign Key → MarketplaceListing)
+├── buyer_id: UUID (Foreign Key → User)
+├── price_paid: Decimal
+├── currency: String
+├── payment_method: String
+├── transaction_id: String (External payment ID)
+├── purchased_at: Timestamp
+└── license_terms: JSON
+
+MarketplaceReview
+├── id: UUID (Primary Key)
+├── listing_id: UUID (Foreign Key → MarketplaceListing)
+├── reviewer_id: UUID (Foreign Key → User)
+├── rating: Integer (1-5)
+├── comment: Text (Optional)
+├── is_verified_purchase: Boolean
+├── created_at: Timestamp
+└── updated_at: Timestamp
+```
+
+#### Wallet & Verification
+```
+WalletEntry
+├── id: UUID (Primary Key)
+├── user_id: UUID (Foreign Key → User)
+├── certificate_id: UUID (Foreign Key → Certificate)
+├── is_public: Boolean
+├── custom_name: String (Optional)
+├── tags: String[]
+├── added_at: Timestamp
+└── last_accessed: Timestamp
+
+VerificationLog
+├── id: UUID (Primary Key)
+├── certificate_id: UUID (Foreign Key → Certificate)
+├── ip_address: String
+├── user_agent: String
+├── verification_method: Enum (QR_CODE, URL, API)
+├── result: Enum (VALID, INVALID, REVOKED, EXPIRED)
+├── accessed_at: Timestamp
+└── location_data: JSON (Optional geolocation)
+```
+
+### Data Relationships & Constraints
+
+#### Primary Relationships
+- **User → Templates**: One-to-Many (Creator relationship)
+- **Template → TemplateVersions**: One-to-Many (Version history)
+- **TemplateVersion → Certificates**: One-to-Many (Generated certificates)
+- **User → Teams**: Many-to-Many (Team membership)
+- **Team → Templates**: One-to-Many (Team ownership)
+
+#### Referential Integrity
+- Cascade deletes are carefully controlled to prevent data loss
+- Soft deletes are used for critical entities like certificates and templates
+- Foreign key constraints ensure data consistency across all relationships
+- Unique constraints prevent duplicate certificate numbers and verification codes
+
+#### Indexing Strategy
+- Primary keys use UUID v4 for distributed system compatibility
+- Composite indexes on frequently queried combinations (user_id + created_at)
+- Full-text search indexes on template names, descriptions, and tags
+- Partial indexes on active/public records for performance optimization
 
 ---
 
 ## 7. Scalability & Performance Design
 
-### Background Jobs for Bulk Operations
-- **Queue Architecture**: Multi-tier queue system with priority lanes and resource pools
-- **Worker Scaling**: Horizontal worker scaling based on queue depth and processing time
-- **Resource Management**: Memory and CPU monitoring with automatic worker recycling
-- **Batch Optimization**: Intelligent batching algorithms to maximize throughput
-- **Failure Recovery**: Comprehensive retry mechanisms with exponential backoff and dead letter queues
+### Horizontal Scaling Architecture
 
-### Stateless API Design
-- **Session Management**: JWT-based authentication with refresh token rotation
-- **Request Processing**: Stateless request handlers with dependency injection
-- **Caching Strategy**: Redis-based caching for frequently accessed data
-- **Load Balancing**: Round-robin load balancing with health checks and failover
-- **Rate Limiting**: Distributed rate limiting with user-based and endpoint-based limits
+#### Stateless Service Design
+All application services are designed to be completely stateless, enabling seamless horizontal scaling across multiple instances.
 
-### CDN-Based Asset Delivery
-- **Global Distribution**: Multi-region CDN with edge caching and geographic routing
-- **Asset Optimization**: Automatic image optimization with format conversion and compression
-- **Cache Invalidation**: Intelligent cache invalidation with versioning and purge strategies
-- **Bandwidth Optimization**: Adaptive bitrate delivery and progressive loading
-- **Security**: Signed URLs for private assets with time-based expiration
+**Stateless Principles:**
+- **Session Management**: All session data is stored in Redis with JWT tokens for authentication
+- **File Processing**: Temporary files are stored in object storage with unique identifiers
+- **Cache Strategy**: Distributed caching with consistent hashing for even load distribution
+- **Database Connections**: Connection pooling with automatic failover and load balancing
 
-### Database Indexing Strategies
-- **Query Optimization**: Composite indexes for common query patterns and filtering
-- **Full-Text Search**: PostgreSQL full-text search with ranking and relevance scoring
-- **Partitioning**: Table partitioning for large datasets with time-based and hash partitioning
-- **Connection Pooling**: PgBouncer connection pooling with connection lifecycle management
-- **Read Replicas**: Read replica configuration for analytics and reporting workloads
+#### Auto-Scaling Configuration
+Dynamic scaling based on real-time metrics and predictive algorithms.
+
+**Scaling Triggers:**
+- **CPU Utilization**: Scale up when average CPU exceeds 70% for 5 minutes
+- **Memory Usage**: Scale up when memory usage exceeds 80% for 3 minutes
+- **Queue Depth**: Scale background workers when job queue exceeds 100 pending jobs
+- **Response Time**: Scale up when average response time exceeds 2 seconds
+
+#### Load Balancing Strategy
+Intelligent request distribution across multiple service instances.
+
+**Load Balancing Features:**
+- **Health Checks**: Continuous health monitoring with automatic instance removal
+- **Sticky Sessions**: Session affinity for WebSocket connections and file uploads
+- **Geographic Routing**: Route requests to nearest data center for optimal latency
+- **Failover Handling**: Automatic failover with circuit breaker patterns
+
+### Background Processing Optimization
+
+#### Queue Management System
+Sophisticated job queue system built on BullMQ with Redis for reliable processing.
+
+**Queue Features:**
+- **Priority Queues**: Multiple priority levels for urgent requests and premium users
+- **Job Scheduling**: Delayed job execution for scheduled certificate generation
+- **Retry Logic**: Exponential backoff with maximum retry limits and dead letter queues
+- **Concurrency Control**: Configurable concurrency limits per job type and worker instance
+
+#### Worker Pool Management
+Dynamic worker scaling based on queue depth and system resources.
+
+**Worker Features:**
+- **Auto-Scaling Workers**: Automatic worker instance scaling based on queue metrics
+- **Resource Isolation**: Separate worker pools for different job types (generation, email, processing)
+- **Memory Management**: Automatic worker recycling to prevent memory leaks
+- **Error Isolation**: Failed jobs don't affect other processing in the same worker
+
+#### Batch Processing Optimization
+Efficient processing of large certificate batches with resource optimization.
+
+**Optimization Techniques:**
+- **Parallel Processing**: Concurrent certificate generation with configurable batch sizes
+- **Memory Streaming**: Stream processing for large datasets to minimize memory usage
+- **Resource Pooling**: Shared Puppeteer instances with connection pooling
+- **Progress Checkpointing**: Resumable processing with progress persistence
+
+### Database Performance Strategy
+
+#### Query Optimization
+Comprehensive database optimization for high-performance operations.
+
+**Optimization Features:**
+- **Index Strategy**: Carefully designed indexes for all common query patterns
+- **Query Analysis**: Regular query performance analysis with optimization recommendations
+- **Connection Pooling**: Optimized connection pool sizing with automatic scaling
+- **Read Replicas**: Read-only replicas for analytics and reporting queries
+
+#### Data Partitioning
+Strategic data partitioning for improved performance and maintenance.
+
+**Partitioning Strategy:**
+- **Time-Based Partitioning**: Certificates partitioned by creation date for efficient archival
+- **User-Based Partitioning**: Large user data partitioned by user ID hash for even distribution
+- **Geographic Partitioning**: Data partitioned by region for compliance and performance
+- **Archive Strategy**: Automated archival of old data with configurable retention policies
+
+#### Caching Architecture
+Multi-layer caching strategy for optimal performance.
+
+**Caching Layers:**
+- **Application Cache**: In-memory caching of frequently accessed data with TTL management
+- **Database Cache**: Query result caching with intelligent invalidation strategies
+- **CDN Cache**: Global CDN caching for static assets and generated certificates
+- **Browser Cache**: Optimized browser caching with proper cache headers and versioning
+
+### CDN & Asset Delivery
+
+#### Global Content Distribution
+Worldwide content delivery network for optimal user experience.
+
+**CDN Features:**
+- **Edge Locations**: Global edge locations for minimal latency worldwide
+- **Smart Routing**: Intelligent routing based on user location and network conditions
+- **Cache Optimization**: Optimized cache policies for different content types
+- **Compression**: Automatic compression and format optimization (WebP, AVIF)
+
+#### Asset Optimization Pipeline
+Automated asset processing and optimization for web delivery.
+
+**Optimization Features:**
+- **Image Processing**: Automatic image resizing, compression, and format conversion
+- **Font Optimization**: Web font subsetting and preloading for faster rendering
+- **Bundle Optimization**: JavaScript and CSS minification with tree shaking
+- **Lazy Loading**: Progressive loading of assets based on user interaction
 
 ---
 
 ## 8. Security Design
 
-### Authentication & RBAC
-- **Multi-Factor Authentication**: TOTP and SMS-based 2FA with backup codes
-- **Role-Based Access Control**: Hierarchical permission system with fine-grained controls
-- **Session Security**: Secure session management with automatic timeout and concurrent session limits
-- **OAuth Integration**: Support for Google, Microsoft, and other OAuth providers
-- **Audit Logging**: Comprehensive authentication and authorization audit trails
+### Authentication & Authorization Framework
 
-### Secure File Uploads
-- **File Validation**: MIME type validation with magic number verification
-- **Virus Scanning**: Real-time virus scanning with quarantine and notification
-- **Size Limits**: Configurable file size limits with user tier-based restrictions
-- **Content Sanitization**: Image metadata stripping and content sanitization
-- **Storage Security**: Encrypted storage with access logging and monitoring
+#### Multi-Factor Authentication System
+Comprehensive authentication system with multiple security layers.
 
-### Tamper-Proof PDFs
-- **Digital Signatures**: PDF digital signatures with certificate authority validation
-- **Hash Verification**: SHA-256 hash generation and verification for integrity checking
-- **Watermarking**: Invisible watermarking for additional authenticity verification
-- **Encryption**: PDF encryption with user-based access controls
-- **Audit Trail**: Complete PDF generation and modification audit trail
+**Authentication Features:**
+- **Primary Authentication**: Email/password with strong password requirements and breach detection
+- **Social Login**: OAuth integration with Google, Microsoft, and GitHub with scope validation
+- **Two-Factor Authentication**: TOTP-based 2FA with backup codes and recovery options
+- **Session Management**: Secure session handling with automatic timeout and concurrent session limits
 
-### Certificate Revocation Logic
-- **Instant Revocation**: Real-time certificate revocation with immediate propagation
-- **Revocation Reasons**: Categorized revocation reasons with audit trail
-- **Notification System**: Automatic notification to stakeholders upon revocation
-- **Grace Periods**: Configurable grace periods for accidental revocations
-- **Recovery Procedures**: Certificate recovery workflows for legitimate restoration
+#### Role-Based Access Control (RBAC)
+Granular permission system with hierarchical roles and resource-level access control.
+
+**RBAC Features:**
+- **Role Hierarchy**: Nested roles with inheritance (Admin > Editor > Viewer)
+- **Resource Permissions**: Fine-grained permissions for templates, certificates, and marketplace items
+- **Team-Based Access**: Team-level permissions with role delegation and approval workflows
+- **API Access Control**: Scoped API tokens with rate limiting and usage monitoring
+
+#### JWT Security Implementation
+Secure token-based authentication with comprehensive security measures.
+
+**JWT Security Features:**
+- **Short-Lived Tokens**: Access tokens with 15-minute expiration and automatic refresh
+- **Refresh Token Rotation**: Automatic refresh token rotation with family tracking
+- **Token Revocation**: Immediate token revocation with distributed blacklist management
+- **Signature Validation**: RSA-256 signatures with key rotation and validation
+
+### Secure File Handling
+
+#### Upload Security Pipeline
+Comprehensive file upload security with multiple validation layers.
+
+**Upload Security Features:**
+- **File Type Validation**: Strict MIME type checking with magic number verification
+- **Size Limitations**: Configurable file size limits with user tier-based restrictions
+- **Virus Scanning**: Real-time virus scanning with quarantine and notification systems
+- **Content Sanitization**: Automatic removal of metadata and potentially harmful content
+
+#### Storage Security Architecture
+Secure file storage with encryption and access control.
+
+**Storage Security Features:**
+- **Encryption at Rest**: AES-256 encryption for all stored files with key rotation
+- **Encryption in Transit**: TLS 1.3 for all data transmission with certificate pinning
+- **Access Control**: Signed URLs with expiration and IP restrictions for file access
+- **Audit Logging**: Comprehensive access logging with anomaly detection
+
+#### Download Protection System
+Secure file delivery with access validation and monitoring.
+
+**Download Protection Features:**
+- **Access Validation**: Real-time permission checking before file delivery
+- **Rate Limiting**: Download rate limiting with user tier-based quotas
+- **Watermarking**: Optional watermarking for sensitive documents with user identification
+- **Download Tracking**: Comprehensive download logging with usage analytics
+
+### Certificate Authenticity & Verification
+
+#### Cryptographic Hash System
+Tamper-proof certificate validation using cryptographic hashing.
+
+**Hash Security Features:**
+- **SHA-256 Hashing**: Industry-standard hashing with salt for uniqueness
+- **Hash Verification**: Real-time hash validation during verification process
+- **Tamper Detection**: Automatic detection of certificate modifications with alert system
+- **Hash Storage**: Secure hash storage with backup and recovery mechanisms
+
+#### QR Code Security Implementation
+Secure QR code generation and validation system.
+
+**QR Security Features:**
+- **Unique Identifiers**: Cryptographically secure random IDs for each certificate
+- **URL Signing**: Signed verification URLs with expiration and validation
+- **Anti-Counterfeiting**: Multiple security layers to prevent QR code duplication
+- **Offline Verification**: Embedded verification data for offline validation scenarios
+
+#### Revocation & Lifecycle Management
+Comprehensive certificate lifecycle management with instant revocation capabilities.
+
+**Lifecycle Features:**
+- **Instant Revocation**: Real-time certificate revocation with global propagation
+- **Expiration Handling**: Automatic expiration processing with notification systems
+- **Status Tracking**: Complete certificate status history with audit trails
+- **Bulk Operations**: Secure bulk revocation with approval workflows and logging
+
+### Data Protection & Privacy
+
+#### Personal Data Handling
+GDPR-compliant personal data processing with comprehensive privacy controls.
+
+**Privacy Features:**
+- **Data Minimization**: Collection of only necessary data with purpose limitation
+- **Consent Management**: Granular consent tracking with withdrawal mechanisms
+- **Data Portability**: Complete data export functionality with standardized formats
+- **Right to Erasure**: Secure data deletion with verification and audit trails
+
+#### Encryption & Key Management
+Enterprise-grade encryption with proper key management and rotation.
+
+**Encryption Features:**
+- **Key Rotation**: Automatic encryption key rotation with seamless migration
+- **Key Escrow**: Secure key backup and recovery mechanisms for business continuity
+- **Hardware Security**: Integration with hardware security modules for key protection
+- **Compliance**: Encryption standards compliance with industry regulations
 
 ---
 
-## 9. Error Handling & Observability
+## 9. Observability & Error Handling
 
-### User-Facing Errors
-- **Error Classification**: Categorized error types with user-friendly messages
-- **Progressive Disclosure**: Layered error information with technical details available on demand
-- **Recovery Suggestions**: Actionable error messages with suggested resolution steps
-- **Error Reporting**: User-initiated error reporting with context capture
-- **Localization**: Multi-language error messages with cultural adaptation
+### Comprehensive Monitoring System
 
-### Retry Strategies
-- **Exponential Backoff**: Intelligent retry timing with jitter to prevent thundering herd
-- **Circuit Breakers**: Automatic circuit breaking for failing services with recovery detection
-- **Partial Failure Handling**: Graceful degradation with partial functionality maintenance
-- **Retry Limits**: Configurable retry limits with escalation procedures
-- **Dead Letter Queues**: Failed job handling with manual intervention capabilities
+#### Application Performance Monitoring (APM)
+Real-time application performance tracking with detailed metrics and alerting.
 
-### Logging and Monitoring Approach
-- **Structured Logging**: JSON-based logging with consistent schema and correlation IDs
-- **Performance Monitoring**: Application performance monitoring with distributed tracing
-- **Health Checks**: Comprehensive health checks with dependency validation
-- **Alerting**: Intelligent alerting with escalation procedures and on-call rotation
-- **Dashboards**: Real-time dashboards with key performance indicators and business metrics
-- **Log Aggregation**: Centralized log aggregation with search and analysis capabilities
+**APM Features:**
+- **Response Time Tracking**: Detailed response time analysis with percentile distributions
+- **Error Rate Monitoring**: Real-time error rate tracking with automatic alerting
+- **Throughput Analysis**: Request volume analysis with capacity planning insights
+- **Dependency Tracking**: External service dependency monitoring with health checks
+
+#### Infrastructure Monitoring
+Comprehensive infrastructure monitoring with predictive analytics.
+
+**Infrastructure Features:**
+- **Resource Utilization**: CPU, memory, disk, and network monitoring with trend analysis
+- **Database Performance**: Query performance monitoring with slow query identification
+- **Queue Monitoring**: Job queue depth and processing time analysis
+- **Cache Performance**: Cache hit rates and performance optimization recommendations
+
+#### Business Metrics Dashboard
+Key business metrics tracking with real-time dashboards and reporting.
+
+**Business Metrics:**
+- **User Engagement**: Active users, session duration, and feature adoption rates
+- **Certificate Generation**: Generation volume, success rates, and processing times
+- **Revenue Tracking**: Marketplace revenue, subscription metrics, and growth analysis
+- **Quality Metrics**: User satisfaction scores, error rates, and support ticket volume
+
+### Structured Logging Architecture
+
+#### Centralized Log Management
+Comprehensive log aggregation and analysis system.
+
+**Logging Features:**
+- **Structured Logging**: JSON-formatted logs with consistent schema and metadata
+- **Log Aggregation**: Centralized log collection from all services and components
+- **Search & Analysis**: Full-text search with filtering, aggregation, and visualization
+- **Retention Policies**: Configurable log retention with automated archival and cleanup
+
+#### Security Event Logging
+Comprehensive security event tracking and analysis.
+
+**Security Logging Features:**
+- **Authentication Events**: Login attempts, failures, and suspicious activity tracking
+- **Access Control**: Permission changes, role modifications, and privilege escalations
+- **Data Access**: Sensitive data access logging with user attribution and context
+- **Anomaly Detection**: Machine learning-based anomaly detection with automated alerting
+
+#### Audit Trail System
+Complete audit trail for compliance and forensic analysis.
+
+**Audit Features:**
+- **User Actions**: Complete user action logging with timestamps and context
+- **Data Changes**: Database change tracking with before/after values
+- **System Events**: System configuration changes and administrative actions
+- **Compliance Reporting**: Automated compliance reports with audit trail evidence
+
+### Error Handling & Recovery
+
+#### Graceful Error Handling
+User-friendly error handling with comprehensive recovery mechanisms.
+
+**Error Handling Features:**
+- **User-Friendly Messages**: Clear, actionable error messages with resolution guidance
+- **Error Classification**: Systematic error categorization with appropriate handling strategies
+- **Fallback Mechanisms**: Graceful degradation with alternative functionality when possible
+- **Error Reporting**: Automatic error reporting with context and reproduction steps
+
+#### Automated Recovery Systems
+Intelligent recovery mechanisms for common failure scenarios.
+
+**Recovery Features:**
+- **Circuit Breakers**: Automatic service isolation during failures with gradual recovery
+- **Retry Logic**: Intelligent retry mechanisms with exponential backoff and jitter
+- **Health Checks**: Continuous health monitoring with automatic service restart
+- **Failover Systems**: Automatic failover to backup systems with minimal downtime
+
+#### Incident Response Framework
+Structured incident response with automated escalation and resolution tracking.
+
+**Incident Response Features:**
+- **Automated Detection**: Proactive incident detection with severity classification
+- **Escalation Procedures**: Automated escalation based on severity and response time
+- **Communication Systems**: Automated stakeholder notification with status updates
+- **Post-Incident Analysis**: Comprehensive post-mortem analysis with improvement recommendations
 
 ---
 
 ## 10. Future Design Considerations
 
-### Microservices Migration
-- **Service Boundaries**: Clear service boundaries based on business capabilities and data ownership
-- **API Gateway**: Centralized API gateway with routing, authentication, and rate limiting
-- **Service Discovery**: Automatic service discovery with health monitoring and load balancing
-- **Data Consistency**: Event-driven architecture with eventual consistency and saga patterns
-- **Inter-Service Communication**: gRPC for internal communication with REST for external APIs
-- **Deployment Strategy**: Blue-green deployments with canary releases and rollback capabilities
+### Microservices Migration Strategy
 
-### Public APIs
-- **API Versioning**: Semantic versioning with backward compatibility and deprecation policies
-- **Developer Portal**: Comprehensive API documentation with interactive examples and SDKs
-- **Rate Limiting**: Tiered rate limiting with usage analytics and billing integration
-- **Webhook System**: Event-driven webhooks with retry logic and signature verification
-- **SDK Development**: Official SDKs for popular programming languages and frameworks
-- **API Analytics**: Detailed API usage analytics with performance monitoring and optimization
+#### Service Decomposition Plan
+Strategic migration from monolithic architecture to microservices.
 
-### White-Label Deployments
-- **Multi-Tenancy**: Tenant isolation with shared infrastructure and customizable branding
-- **Custom Domains**: Support for custom domains with SSL certificate management
-- **Theme Customization**: Comprehensive theming system with brand guidelines enforcement
-- **Feature Toggles**: Granular feature control with tenant-specific configurations
-- **Data Isolation**: Complete data isolation with tenant-specific databases and storage
-- **Billing Integration**: Flexible billing models with usage tracking and invoicing
+**Migration Phases:**
+1. **Domain Identification**: Clear service boundaries based on business domains
+2. **Data Separation**: Database decomposition with eventual consistency patterns
+3. **API Gateway**: Centralized API gateway with service discovery and routing
+4. **Service Mesh**: Advanced service-to-service communication with security and observability
 
-### AI-Powered Design Assistance
-- **Template Recommendations**: Machine learning-based template suggestions based on user behavior
-- **Design Optimization**: AI-powered design optimization with accessibility and readability analysis
-- **Content Generation**: Natural language processing for automatic content generation and optimization
-- **Fraud Detection**: Advanced fraud detection using machine learning and behavioral analysis
-- **Personalization**: Personalized user experiences with adaptive interfaces and recommendations
-- **Predictive Analytics**: Predictive analytics for usage patterns and capacity planning
+#### Inter-Service Communication
+Robust communication patterns for distributed system reliability.
+
+**Communication Patterns:**
+- **Synchronous Communication**: REST APIs with circuit breakers and timeout handling
+- **Asynchronous Messaging**: Event-driven architecture with message queues and event sourcing
+- **Service Discovery**: Dynamic service registration and discovery with health checking
+- **Load Balancing**: Intelligent load balancing with service-aware routing
+
+### Public API Platform
+
+#### API Design Philosophy
+RESTful API design with GraphQL capabilities for flexible data access.
+
+**API Features:**
+- **REST Endpoints**: Comprehensive REST API with OpenAPI specification
+- **GraphQL Interface**: Flexible GraphQL API for complex data requirements
+- **Webhook System**: Event-driven webhooks for real-time integrations
+- **SDK Development**: Official SDKs for popular programming languages
+
+#### Developer Experience
+Comprehensive developer tools and documentation for API adoption.
+
+**Developer Tools:**
+- **Interactive Documentation**: Live API documentation with testing capabilities
+- **Code Examples**: Comprehensive code examples in multiple programming languages
+- **Sandbox Environment**: Full-featured sandbox for testing and development
+- **Developer Portal**: Self-service developer portal with analytics and support
+
+### Multi-Tenant Architecture
+
+#### Tenant Isolation Strategy
+Secure multi-tenant architecture with data isolation and customization.
+
+**Isolation Features:**
+- **Data Isolation**: Complete data separation with tenant-specific databases
+- **Customization Engine**: Tenant-specific branding, features, and configurations
+- **Resource Allocation**: Tenant-based resource quotas and performance isolation
+- **Billing Integration**: Tenant-specific billing and usage tracking
+
+#### White-Label Deployment
+Complete white-label solution for enterprise customers.
+
+**White-Label Features:**
+- **Custom Branding**: Complete UI customization with customer branding
+- **Domain Management**: Custom domain support with SSL certificate management
+- **Feature Configuration**: Tenant-specific feature enablement and configuration
+- **Integration Capabilities**: Custom integrations with customer systems and workflows
+
+### AI-Powered Enhancements
+
+#### Intelligent Design Assistant
+AI-powered design suggestions and optimization recommendations.
+
+**AI Features:**
+- **Layout Optimization**: Automatic layout suggestions based on design principles
+- **Content Suggestions**: AI-generated content recommendations for certificates
+- **Design Validation**: Automatic design quality assessment with improvement suggestions
+- **Accessibility Enhancement**: AI-powered accessibility improvements and compliance checking
+
+#### Predictive Analytics
+Machine learning-powered insights and predictions for business optimization.
+
+**Analytics Features:**
+- **Usage Prediction**: Predictive analytics for resource planning and scaling
+- **Quality Prediction**: Predictive quality assessment for template and certificate generation
+- **Personalization Engine**: AI-powered personalization for user experience optimization
+- **Fraud Detection**: Machine learning-based fraud detection for marketplace and verification
+
+### Advanced Integration Capabilities
+
+#### Enterprise System Integration
+Comprehensive integration capabilities for enterprise customers.
+
+**Integration Features:**
+- **SSO Integration**: Enterprise SSO with SAML, OIDC, and Active Directory support
+- **LMS Integration**: Learning Management System integration with grade passback
+- **HR System Integration**: Human Resources system integration for employee certificates
+- **CRM Integration**: Customer Relationship Management integration for customer certificates
+
+#### Blockchain Integration
+Optional blockchain integration for enhanced verification and immutability.
+
+**Blockchain Features:**
+- **Certificate Anchoring**: Optional blockchain anchoring for immutable certificate records
+- **Smart Contracts**: Automated certificate issuance and verification through smart contracts
+- **Decentralized Verification**: Blockchain-based verification without centralized authority
+- **Token Integration**: Optional token-based rewards and incentive systems
 
 ---
 
-*This system design document provides the architectural foundation for IconikCerts and will evolve as the platform grows and new requirements emerge. The design prioritizes scalability, maintainability, and user experience while ensuring robust security and performance characteristics.*
+*This design document serves as the technical foundation for IconikCerts development and will evolve as the system grows and new requirements emerge. The architecture prioritizes scalability, security, and maintainability while enabling rapid feature development and deployment.*
