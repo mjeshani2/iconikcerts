@@ -4,6 +4,7 @@
 
 IconikCerts is an enterprise-grade, automation-first certificate generation platform designed to streamline the complete certificate lifecycle from design through verification. Built for educational institutions, corporations, event organizers, and individual creators who demand professional quality, operational efficiency, and scalable automation.
 
+[![IconikStudio](https://img.shields.io/badge/IconikStudio-Follow%20Us-E4405F?logo=instagram&logoColor=white)](https://www.instagram.com/iconikstudio.in/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
@@ -21,44 +22,44 @@ IconikCerts addresses the critical challenges organizations face in certificate 
 - **Community Innovation**: Sustainable template marketplace with creator monetization
 - **Verification Integrity**: Tamper-proof certificate validation with instant verification
 
-## ✨ Key Features
+## Key Features
 
-### 🎨 **Smart Template Builder**
+### **Smart Template Builder**
 - Drag-and-drop certificate editor with real-time preview
 - Dynamic text fields ({{Name}}, {{Course}}, {{Date}}, {{ID}})
 - Image uploads, QR codes, and custom styling
 - Lifetime reusable templates with versioning
 - Alignment guides and precision tools
 
-### ⚡ **Bulk Certificate Generation**
+### **Bulk Certificate Generation**
 - Upload CSV/Excel files with recipient data
 - Generate 100-10,000 certificates in one action
 - Automatic ZIP download and email delivery
 - Duplicate detection and validation
 - Real-time progress tracking
 
-### 🖨️ **Professional Print Studio**
+### **Professional Print Studio**
 - Multiple paper sizes (A4, Letter, Legal, Custom)
 - Portrait/landscape orientation support
 - Margin and bleed control for commercial printing
 - Print-perfect PDF output with DPI optimization
 - Batch print management
 
-### 🛒 **Community Marketplace**
+### **Community Marketplace**
 - Upload and monetize certificate templates
 - Browse thousands of professional designs
 - Rating and review system
 - Creator profiles and revenue sharing
 - Featured templates and collections
 
-### 🔐 **Certificate Verification**
+### **Certificate Verification**
 - Unique QR code per certificate
 - Public verification pages (no login required)
 - Tamper-proof certificate validation
 - Personal certificate wallet for recipients
 - Instant revocation capabilities
 
-### 👥 **Team Collaboration**
+### **Team Collaboration**
 - Role-based access control (Admin/Editor/Viewer)
 - Team workspaces and shared templates
 - Approval workflows for certificate issuance
@@ -153,7 +154,7 @@ yarn dev
 **6. Application Access**
 Navigate to [http://localhost:3000](http://localhost:3000) to access the development environment.
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Next.js 14+** - Full-stack React framework
@@ -795,11 +796,11 @@ copies or substantial portions of the Software.
 [![GitHub Issues](https://img.shields.io/github/issues/mjeshani2/iconikcerts)](https://github.com/mjeshani2/iconikcerts/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/mjeshani2/iconikcerts)](https://github.com/mjeshani2/iconikcerts/pulls)
 
-**[⭐ Star us on GitHub](https://github.com/mjeshani2/iconikcerts)** •
-**[🐛 Report Bug](https://github.com/mjeshani2/iconikcerts/issues/new?template=bug_report.md)** •
-**[💡 Request Feature](https://github.com/mjeshani2/iconikcerts/issues/new?template=feature_request.md)** •
-**[📖 Documentation](./docs/)** •
-**[🚀 Live Demo](https://iconikcerts.com)**
+**[ Star us on GitHub](https://github.com/mjeshani2/iconikcerts)** •
+**[ Report Bug](https://github.com/mjeshani2/iconikcerts/issues/new?template=bug_report.md)** •
+**[ Request Feature](https://github.com/mjeshani2/iconikcerts/issues/new?template=feature_request.md)** •
+
+
 
 *Making certificate generation simple, scalable, and secure for everyone.*
 
